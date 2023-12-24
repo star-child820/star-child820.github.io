@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+
+
+<html theme="dark" showBanner="true" hasBanner="false" > 
+<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet">
+<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet">
+<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet">
+<script src="/js/color.global.min.js" ></script>
+<script src="/js/load-settings.js" ></script>
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+
+  
+  <title>安卓逆向 | 追着光梦游</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="preload" href="/css/fonts/Roboto-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+  <link rel="preload" href="/css/fonts/Roboto-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+  <meta name="description" content="安卓逆向目录 安卓加壳脱壳原理  虚拟环境安装  初识APK  APK结构  双开及原理  初识AndroidManifest.xml    初识smali  什么是JVM、Dalvik、ART  smali及其语法    弹窗定位  安卓四大组件  Activity生命周期    动态调试  什么是动态调试  动态调试步骤  修改debug权限  端口转发以及开启adb权限  下段点  debu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安卓逆向">
+<meta property="og:url" content="http://example.com/2023/12/23/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/index.html">
+<meta property="og:site_name" content="追着光梦游">
+<meta property="og:description" content="安卓逆向目录 安卓加壳脱壳原理  虚拟环境安装  初识APK  APK结构  双开及原理  初识AndroidManifest.xml    初识smali  什么是JVM、Dalvik、ART  smali及其语法    弹窗定位  安卓四大组件  Activity生命周期    动态调试  什么是动态调试  动态调试步骤  修改debug权限  端口转发以及开启adb权限  下段点  debu">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/image/image_CA9SrG4SXL.png">
+<meta property="og:image" content="http://example.com/image/image_Y4lP5Fwd9E.png">
+<meta property="article:published_time" content="2023-12-23T05:49:57.026Z">
+<meta property="article:modified_time" content="2023-12-24T08:46:41.768Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image/image_CA9SrG4SXL.png">
+  
+    <link rel="alternate" href="/atom.xml" title="追着光梦游" type="application/atom+xml">
+  
+  
+    <link rel="icon" media="(prefers-color-scheme: light)" href="/images/favicon-light-32.png" sizes="32x32">
+    <link rel="icon" media="(prefers-color-scheme: light)" href="/images/favicon-light-128.png" sizes="128x128">
+    <link rel="icon" media="(prefers-color-scheme: light)" href="/images/favicon-light-180.png" sizes="180x180">
+    <link rel="icon" media="(prefers-color-scheme: light)" href="/images/favicon-light-192.png" sizes="192x192">
+    <link rel="icon" media="(prefers-color-scheme: dark)" href="/images/favicon-dark-32.png" sizes="32x32">
+    <link rel="icon" media="(prefers-color-scheme: dark)" href="/images/favicon-dark-128.png" sizes="128x128">
+    <link rel="icon" media="(prefers-color-scheme: dark)" href="/images/favicon-dark-180.png" sizes="180x180">
+    <link rel="icon" media="(prefers-color-scheme: dark)" href="/images/favicon-dark-192.png" sizes="192x192">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body>
+  
+   
+  <div id="main-grid" class="  ">
+    <div id="nav" class=""  >
+      <navbar id="navbar">
+  <nav id="title-nav">
+    <a href="/">
+      <div id="vivia-logo">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div>追着光梦游 </div>
+    </a>
+  </nav>
+  <nav id="main-nav">
+    
+      <a class="main-nav-link" href="/">Home</a>
+    
+      <a class="main-nav-link" href="/archives">Archives</a>
+    
+      <a class="main-nav-link" href="/about">About</a>
+    
+  </nav>
+  <nav id="sub-nav">
+    <a id="theme-btn" class="nav-icon">
+      <span class="light-mode-icon"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M438.5-829.913v-48q0-17.452 11.963-29.476 11.964-12.024 29.326-12.024 17.363 0 29.537 12.024t12.174 29.476v48q0 17.452-11.963 29.476-11.964 12.024-29.326 12.024-17.363 0-29.537-12.024T438.5-829.913Zm0 747.826v-48q0-17.452 11.963-29.476 11.964-12.024 29.326-12.024 17.363 0 29.537 12.024t12.174 29.476v48q0 17.452-11.963 29.476-11.964 12.024-29.326 12.024-17.363 0-29.537-12.024T438.5-82.087ZM877.913-438.5h-48q-17.452 0-29.476-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537t29.476-12.174h48q17.452 0 29.476 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T877.913-438.5Zm-747.826 0h-48q-17.452 0-29.476-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537T82.087-521.5h48q17.452 0 29.476 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T130.087-438.5Zm660.174-290.87-34.239 32q-12.913 12.674-29.565 12.174-16.653-.5-29.327-13.174-12.674-12.673-12.554-28.826.12-16.152 12.794-28.826l33-35q12.913-12.674 30.454-12.674t30.163 12.847q12.709 12.846 12.328 30.826-.38 17.98-13.054 30.653ZM262.63-203.978l-32 34q-12.913 12.674-30.454 12.674t-30.163-12.847q-12.709-12.846-12.328-30.826.38-17.98 13.054-30.653l33.239-31q12.913-12.674 29.565-12.174 16.653.5 29.327 13.174 12.674 12.673 12.554 28.826-.12 16.152-12.794 28.826Zm466.74 33.239-32-33.239q-12.674-12.913-12.174-29.565.5-16.653 13.174-29.327 12.673-12.674 28.826-13.054 16.152-.38 28.826 12.294l35 33q12.674 12.913 12.674 30.454t-12.847 30.163q-12.846 12.709-30.826 12.328-17.98-.38-30.653-13.054ZM203.978-697.37l-34-33q-12.674-12.913-13.174-29.945-.5-17.033 12.174-29.707t31.326-13.293q18.653-.62 31.326 13.054l32 34.239q11.674 12.913 11.174 29.565-.5 16.653-13.174 29.327-12.673 12.674-28.826 12.554-16.152-.12-28.826-12.794ZM480-240q-100 0-170-70t-70-170q0-100 70-170t170-70q100 0 170 70t70 170q0 100-70 170t-170 70Zm-.247-82q65.703 0 111.475-46.272Q637-414.544 637-480.247t-45.525-111.228Q545.95-637 480.247-637t-111.475 45.525Q323-545.95 323-480.247t45.525 111.975Q414.05-322 479.753-322ZM481-481Z"/></svg></span>
+      <span class="dark-mode-icon"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480.239-116.413q-152.63 0-258.228-105.478Q116.413-327.37 116.413-480q0-130.935 77.739-227.435t206.304-125.043q43.022-9.631 63.87 10.869t3.478 62.805q-8.891 22.043-14.315 44.463-5.424 22.42-5.424 46.689 0 91.694 64.326 155.879 64.325 64.186 156.218 64.186 24.369 0 46.978-4.946 22.609-4.945 44.413-14.076 42.826-17.369 62.967 1.142 20.142 18.511 10.511 61.054Q807.174-280 712.63-198.206q-94.543 81.793-232.391 81.793Zm0-95q79.783 0 143.337-40.217 63.554-40.218 95.793-108.283-15.608 4.044-31.097 5.326-15.49 1.283-31.859.805-123.706-4.066-210.777-90.539-87.071-86.473-91.614-212.092-.24-16.369.923-31.978 1.164-15.609 5.446-30.978-67.826 32.478-108.282 96.152Q211.652-559.543 211.652-480q0 111.929 78.329 190.258 78.329 78.329 190.258 78.329ZM466.13-465.891Z"/></svg></span>
+    </a>
+    
+      <a id="nav-rss-link" class="nav-icon mobile-hide" href="/atom.xml" title="RSS Feed">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M198-120q-25.846 0-44.23-18.384-18.384-18.385-18.384-44.23 0-25.846 18.384-44.23 18.384-18.385 44.23-18.385 25.846 0 44.23 18.385 18.384 18.384 18.384 44.23 0 25.845-18.384 44.23Q223.846-120 198-120Zm538.385 0q-18.846 0-32.923-13.769-14.076-13.769-15.922-33.23-8.692-100.616-51.077-188.654-42.385-88.039-109.885-155.539-67.5-67.501-155.539-109.885Q283-663.462 182.385-672.154q-19.461-1.846-33.23-16.23-13.769-14.385-13.769-33.846t14.076-32.922q14.077-13.461 32.923-12.23 120.076 8.692 226.038 58.768 105.961 50.077 185.73 129.846 79.769 79.769 129.846 185.731 50.077 105.961 58.769 226.038 1.231 18.846-12.538 32.922Q756.461-120 736.385-120Zm-252 0q-18.231 0-32.423-13.461t-18.653-33.538Q418.155-264.23 348.886-333.5q-69.27-69.27-166.501-84.423-20.077-4.462-33.538-18.961-13.461-14.5-13.461-33.346 0-19.076 13.884-33.23 13.884-14.153 33.115-10.922 136.769 15.384 234.384 112.999 97.615 97.615 112.999 234.384 3.231 19.23-10.538 33.115Q505.461-120 484.385-120Z"/></svg>
+      </a>
+    
+    <div id="nav-menu-btn" class="nav-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M177.37-252.282q-17.453 0-29.477-11.964-12.024-11.963-12.024-29.326t12.024-29.537q12.024-12.174 29.477-12.174h605.26q17.453 0 29.477 11.964 12.024 11.963 12.024 29.326t-12.024 29.537q-12.024 12.174-29.477 12.174H177.37Zm0-186.218q-17.453 0-29.477-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537T177.37-521.5h605.26q17.453 0 29.477 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T782.63-438.5H177.37Zm0-186.217q-17.453 0-29.477-11.964-12.024-11.963-12.024-29.326t12.024-29.537q12.024-12.174 29.477-12.174h605.26q17.453 0 29.477 11.964 12.024 11.963 12.024 29.326t-12.024 29.537q-12.024 12.174-29.477 12.174H177.37Z"/></svg>
+    </div>
+  </nav>
+</navbar>
+<div id="nav-dropdown" class="hidden">
+  <div id="dropdown-link-list">
+    
+      <a class="nav-dropdown-link" href="/">Home</a>
+    
+      <a class="nav-dropdown-link" href="/archives">Archives</a>
+    
+      <a class="nav-dropdown-link" href="/about">About</a>
+    
+    
+      <a class="nav-dropdown-link" href="/atom.xml" title="RSS Feed">RSS</a>
+     
+    </div>
+</div>
+<script>
+  let dropdownBtn = document.getElementById("nav-menu-btn");
+  let dropdownEle = document.getElementById("nav-dropdown");
+  dropdownBtn.onclick = function() {
+    dropdownEle.classList.toggle("hidden");
+  }
+</script>
+    </div>
+    <div id="sidebar-wrapper">
+      <sidebar id="sidebar">
+  
+    <div class="widget-wrap">
+  <div class="info-card">
+    <div class="avatar">
+      
+        <image src=/avater2.jpg></image>
+      
+      <div class="img-dim"></div>
+    </div>
+    <div class="info">
+      <div class="username">追着光梦游 </div>
+      <div class="dot"></div>
+      <div class="subtitle">研究生&网易音乐人 </div>
+      <div class="link-list">
+        
+          <a class="link-btn" href="wechat.jpg" title="WeChat"><i class="fa-brands fa-weixin"></i></a>
+        
+          <a class="link-btn" target="_blank" rel="noopener" href="https://music.163.com/#/artist?id=33240593" title="Netease Cloud Music"><i class="fa-solid fa-music"></i></a>
+        
+          <a class="link-btn" target="_blank" rel="noopener" href="https://github.com/star-child820" title="GitHub"><i class="fa-brands fa-github"></i></a>
+         
+      </div>  
+    </div>
+  </div>
+</div>
+
+  
+  <div class="sticky">
+    
+      
+
+
+
+    
+      
+
+    
+      
+  <div class="widget-wrap">
+    <div class="widget">
+      <h3 class="widget-title">Archives</h3>
+      
+      
+        <a class="archive-link" href="/archives/2023/12 ">
+          December 2023 
+          <div class="archive-count">2 </div>
+        </a>
+      
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap">
+    <div class="widget">
+      <h3 class="widget-title">Recent Posts</h3>
+      <ul>
+        
+          <a class="recent-link" href="/2023/12/23/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/" title="安卓逆向" >
+            <div class="recent-link-text">
+              安卓逆向
+            </div>
+          </a>
+        
+          <a class="recent-link" href="/2023/12/23/hello-world/" title="Hello World" >
+            <div class="recent-link-text">
+              Hello World
+            </div>
+          </a>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+  </div>
+</sidebar>
+    </div>
+    <div id="content-body">
+       
+
+
+<article id="post-安卓逆向/安卓逆向" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+    
+   
+  <div class="article-inner">
+    <div class="article-main">
+      <header class="article-header">
+        
+<div class="main-title-bar">
+  <div class="main-title-dot"></div>
+  
+    
+      <h1 class="p-name article-title" itemprop="headline name">
+        安卓逆向
+      </h1>
+    
+  
+</div>
+
+        <div class='meta-info-bar'>
+          <div class="meta-info">
+  <time class="dt-published" datetime="2023-12-23T05:49:57.026Z" itemprop="datePublished">2023-12-23</time>
+</div>
+          <div class="need-seperator meta-info">
+            <div class="meta-cate-flex">
+  
+    Uncategorized 
+   
+</div>
+  
+          </div>
+          <div class="wordcount need-seperator meta-info">
+            7.2k words 
+          </div>
+        </div>
+        
+      </header>
+      <div class="e-content article-entry" itemprop="articleBody">
+        
+          <h1 id="安卓逆向"><a href="#安卓逆向" class="headerlink" title="安卓逆向"></a>安卓逆向</h1><h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><p><a href="#%E5%AE%89%E5%8D%93%E5%8A%A0%E5%A3%B3%E8%84%B1%E5%A3%B3%E5%8E%9F%E7%90%86">安卓加壳脱壳原理</a></p>
+</li>
+<li><p><a href="#%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85">虚拟环境安装</a></p>
+</li>
+<li><p><a href="#%E5%88%9D%E8%AF%86APK">初识APK</a></p>
+<ul>
+<li><p><a href="#APK%E7%BB%93%E6%9E%84">APK结构</a></p>
+</li>
+<li><p><a href="#%E5%8F%8C%E5%BC%80%E5%8F%8A%E5%8E%9F%E7%90%86">双开及原理</a></p>
+</li>
+<li><p><a href="#%E5%88%9D%E8%AF%86AndroidManifestxml">初识AndroidManifest.xml</a></p>
+</li>
+</ul>
+</li>
+<li><p><a href="#%E5%88%9D%E8%AF%86smali">初识smali</a></p>
+<ul>
+<li><p><a href="#%E4%BB%80%E4%B9%88%E6%98%AFJVMDalvikART">什么是JVM、Dalvik、ART</a></p>
+</li>
+<li><p><a href="#smali%E5%8F%8A%E5%85%B6%E8%AF%AD%E6%B3%95">smali及其语法</a></p>
+</li>
+</ul>
+</li>
+<li><p><a href="#%E5%BC%B9%E7%AA%97%E5%AE%9A%E4%BD%8D">弹窗定位</a></p>
+<ul>
+<li><p><a href="#%E5%AE%89%E5%8D%93%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6">安卓四大组件</a></p>
+</li>
+<li><p><a href="#Activity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">Activity生命周期</a></p>
+</li>
+</ul>
+</li>
+<li><p><a href="#%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95">动态调试</a></p>
+<ul>
+<li><p><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95">什么是动态调试</a></p>
+</li>
+<li><p><a href="#%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E6%AD%A5%E9%AA%A4">动态调试步骤</a></p>
+<ul>
+<li><p><a href="#%E4%BF%AE%E6%94%B9debug%E6%9D%83%E9%99%90">修改debug权限</a></p>
+</li>
+<li><p><a href="#%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E4%BB%A5%E5%8F%8A%E5%BC%80%E5%90%AFadb%E6%9D%83%E9%99%90">端口转发以及开启adb权限</a></p>
+</li>
+<li><p><a href="#%E4%B8%8B%E6%AE%B5%E7%82%B9">下段点</a></p>
+</li>
+<li><p><a href="#debug%E6%A8%A1%E5%BC%8F%E5%90%AF%E5%8A%A8">debug模式启动</a></p>
+</li>
+<li><p><a href="#Log%E6%8F%92%E6%A1%A9">Log插桩</a></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a href="#%E6%A0%A1%E9%AA%8C%E5%92%8C%E7%AD%BE%E5%90%8D">校验和签名</a></p>
+<ul>
+<li><p><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%A0%A1%E9%AA%8C">什么是校验</a></p>
+</li>
+<li><p><a href="#%E4%BB%80%E4%B9%88%E6%98%AFAPK%E7%AD%BE%E5%90%8D">什么是APK签名</a></p>
+</li>
+</ul>
+</li>
+<li><p><a href="#HOOK">HOOK</a></p>
+<ul>
+<li><p><a href="#Xposed">Xposed</a></p>
+</li>
+<li><p><a href="#Xposed-%E5%8E%9F%E7%90%86">Xposed 原理</a></p>
+</li>
+<li><p><a href="#Xposed%E5%A6%99%E7%94%A8">Xposed妙用</a></p>
+</li>
+</ul>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1wT411N7sV/?spm_id_from=333.999.0.0&vd_source=45b16ea11079506036adfafe6d4c7e53" title="吾爱破解安卓逆向入门教程《安卓逆向这档事》一、模拟器环境搭建_哔哩哔哩_bilibili">吾爱破解安卓逆向入门教程《安卓逆向这档事》一、模拟器环境搭建_哔哩哔哩_bilibili</a></p>
+<h3 id="安卓加壳脱壳原理"><a href="#安卓加壳脱壳原理" class="headerlink" title="安卓加壳脱壳原理"></a>安卓加壳脱壳原理</h3><p><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1865310-1-1.html" title="安卓加壳脱壳原理-简单概要 - 『移动安全区』 - 吾爱破解 - LCG - LSG |安卓破解|病毒分析|www.52pojie.cn">安卓加壳脱壳原理-简单概要 - 『移动安全区』 - 吾爱破解 - LCG - LSG |安卓破解|病毒分析|www.52pojie.cn</a></p>
+<p>简单来说就是给apk增加安全性，但是现在我们可以打开手机随机选中几个app，然后查看是否有加壳，注意这里选择的app是大厂的app，例如DY、MT、TB、王者荣耀、百度网盘，那这些app都是不加壳的，那为什么这些大厂他们的app不加壳呢，不是加壳给apk本身增加了安全性吗？</p>
+<p>是的，原则上加壳确实能给apk本身带来诸多的安全性和增加被不法分子利用的可能性，但是在考虑到例如一万个人当中可能也就那么几个人会对这些app进行分析牟不牟利且不说，我作为一个大厂我就算不加壳我就不能有其他的手段来保护我的资产吗？是吧，如果真有这么容易解决一个大厂的app，那要我们这些真正想要做安全研究的人怎么办，那还有一个最主要的问题就是，这些app本身就是我们日常生活中都会使用的 而且是频繁的，而一个app加壳后最大影响的就是用户在使用过程中的体验，各位可以下载个中国移动看看，真的是一动不动，我每次用他们的app就想怒喷一堆垃圾话。</p>
+<h2 id="虚拟环境安装"><a href="#虚拟环境安装" class="headerlink" title="虚拟环境安装"></a>虚拟环境安装</h2><p>雷电9 + Magisk + LSPosed</p>
+<h2 id="初识APK"><a href="#初识APK" class="headerlink" title="初识APK"></a>初识APK</h2><h3 id="APK结构"><a href="#APK结构" class="headerlink" title="APK结构"></a>APK结构</h3><p>apk 全称 Android Package，它相当于一个压缩文件，只要在电脑上将apk后缀改为zip即可解压。</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>assets目录</td>
+<td>存放APK的静态资源文件，比如视频，音频，图片等</td>
+</tr>
+<tr>
+<td>lib 目录</td>
+<td>armeabi-v7a基本通用所有android设备，arm64-v8a只适用于64位的android设备，x86常见用于android模拟器，其目录下的.so文件是c或c++编译的动态链接库文件</td>
+</tr>
+<tr>
+<td>META-INF目录</td>
+<td>保存应用的签名信息，签名信息可以验证APK文件的完整性，相当于APK的身份证(验证文件是否又被修改)</td>
+</tr>
+<tr>
+<td>res目录</td>
+<td>res目录存放资源文件，包括图片，字符串等等，APK的脸蛋由他的layout文件设计</td>
+</tr>
+<tr>
+<td>AndroidMainfest.xml文件</td>
+<td>APK的应用清单信息，它描述了应用的名字，版本，权限，引用的库文件等等信息</td>
+</tr>
+<tr>
+<td>classes.dex文件</td>
+<td>classes.dex是java源码编译后生成的java字节码文件，APK运行的主要逻辑</td>
+</tr>
+<tr>
+<td>resources.arsc文件</td>
+<td>resources.arsc是编译后的二进制资源文件，它是一个映射表，映射着资源和id，通过R文件中的id就可以找到对应的资源</td>
+</tr>
+</tbody></table>
+<h3 id="双开及原理"><a href="#双开及原理" class="headerlink" title="双开及原理"></a>双开及原理</h3><p>双开：简单来说，就是手机同时运行两个或多个相同的应用，例如同时运行两个微信</p>
+<table>
+<thead>
+<tr>
+<th>原理</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>修改包名</td>
+<td>让手机系统认为这是2个APP，这样的话就能生成2个数据存储路径，此时的多开就等于你打开了两个互不干扰的APP</td>
+</tr>
+<tr>
+<td>修改Framework</td>
+<td>对于有系统修改权限的厂商，可以修改Framework来实现双开的目的，例如：小米自带多开</td>
+</tr>
+<tr>
+<td>通过虚拟化技术实现</td>
+<td>虚拟Framework层、虚拟文件系统、模拟Android对组件的管理、虚拟应用进程管理 等一整套虚拟技术，将APK复制一份到虚拟空间中运行，例如：平行空间</td>
+</tr>
+<tr>
+<td>以插件机制运行</td>
+<td>利用反射替换，动态代{过}{滤}理，hook了系统的大部分与system—server进程通讯的函数，以此作为“欺上瞒下”的目的，欺骗系统“以为”只有一个apk在运行，瞒过插件让其“认为”自己已经安装。例如：VirtualApp</td>
+</tr>
+</tbody></table>
+<h3 id="初识AndroidManifest-xml"><a href="#初识AndroidManifest-xml" class="headerlink" title="初识AndroidManifest.xml"></a>初识AndroidManifest.xml</h3><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>versionCode</td>
+<td>版本号，主要用来更新，例如:12</td>
+</tr>
+<tr>
+<td>versionName</td>
+<td>版本名，给用户看的，例如:1.2</td>
+</tr>
+<tr>
+<td>package</td>
+<td>包名，例如：com.zj.52pj.demo</td>
+</tr>
+<tr>
+<td>uses-permission android:name&#x3D;””</td>
+<td>应用权限，例如：android.permission.INTERNET 代表网络权限</td>
+</tr>
+<tr>
+<td>android:label&#x3D;”@string&#x2F;app_name”</td>
+<td>应用名称</td>
+</tr>
+<tr>
+<td>android:icon&#x3D;”@mipmap&#x2F;ic_launcher”</td>
+<td>应用图标路径</td>
+</tr>
+<tr>
+<td>android:debuggable&#x3D;”true”</td>
+<td>应用是否开启debug权限</td>
+</tr>
+</tbody></table>
+<h2 id="初识smali"><a href="#初识smali" class="headerlink" title="初识smali"></a>初识smali</h2><h3 id="什么是JVM、Dalvik、ART"><a href="#什么是JVM、Dalvik、ART" class="headerlink" title="什么是JVM、Dalvik、ART"></a>什么是JVM、Dalvik、ART</h3><p>JVM是JAVA虚拟机，运行JAVA字节码程序 &#x20;<br>Dalvik是Google专门为Android设计的一个虚拟机，Dalvik有专属的文件执行格式dex(Dalvik executable) &#x20;<br>Art(Android Runtime)相当于Dalvik的升级版，本质与Dalvik无异</p>
+<h3 id="smali及其语法"><a href="#smali及其语法" class="headerlink" title="smali及其语法"></a>smali及其语法</h3><p>smali是Dalvik的寄存器语言，smali代码是dex反编译而来的。</p>
+<blockquote>
+<p>关键字</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.class</td>
+<td>类名</td>
+</tr>
+<tr>
+<td>.super</td>
+<td>父类名，继承的上级类名名称</td>
+</tr>
+<tr>
+<td>.source</td>
+<td>源名</td>
+</tr>
+<tr>
+<td>.field</td>
+<td>变量</td>
+</tr>
+<tr>
+<td>.method</td>
+<td>方法名</td>
+</tr>
+<tr>
+<td>.register</td>
+<td>寄存器</td>
+</tr>
+<tr>
+<td>.end method</td>
+<td>方法名的结束</td>
+</tr>
+<tr>
+<td>public</td>
+<td>公有</td>
+</tr>
+<tr>
+<td>protected</td>
+<td>半公开，只有同一家人才能用</td>
+</tr>
+<tr>
+<td>private</td>
+<td>私有，只能自己使用</td>
+</tr>
+<tr>
+<td>.parameter</td>
+<td>方法参数</td>
+</tr>
+<tr>
+<td>.prologue</td>
+<td>方法开始</td>
+</tr>
+<tr>
+<td>.line xxx</td>
+<td>位于第xxx行</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>数据类型对应</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>smali类型</th>
+<th>java类型</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>V</td>
+<td>void</td>
+<td>无返回值</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>boolean</td>
+<td>布尔值类型，返回0或1</td>
+</tr>
+<tr>
+<td>B</td>
+<td>byte</td>
+<td>字节类型，返回字节</td>
+</tr>
+<tr>
+<td>S</td>
+<td>short</td>
+<td>短整数类型，返回数字</td>
+</tr>
+<tr>
+<td>C</td>
+<td>char</td>
+<td>字符类型，返回字符</td>
+</tr>
+<tr>
+<td>I</td>
+<td>int</td>
+<td>整数类型，返回数字</td>
+</tr>
+<tr>
+<td>J</td>
+<td>long （64位 需要2个寄存器存储）</td>
+<td>长整数类型，返回数字</td>
+</tr>
+<tr>
+<td>F</td>
+<td>float</td>
+<td>单浮点类型，返回数字</td>
+</tr>
+<tr>
+<td>D</td>
+<td>double （64位 需要2个寄存器存储）</td>
+<td>双浮点类型，返回数字</td>
+</tr>
+<tr>
+<td>string</td>
+<td>String</td>
+<td>文本类型，返回字符串</td>
+</tr>
+<tr>
+<td>Lxxx&#x2F;xxx&#x2F;xxx</td>
+<td>object</td>
+<td>对象类型，返回对象</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>常用指令</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>const</td>
+<td>重写整数属性，真假属性内容，只能是数字类型</td>
+</tr>
+<tr>
+<td>const-string</td>
+<td>重写字符串内容</td>
+</tr>
+<tr>
+<td>const-wide</td>
+<td>重写长整数类型，多用于修改到期时间。</td>
+</tr>
+<tr>
+<td>return</td>
+<td>返回指令</td>
+</tr>
+<tr>
+<td>if-eq</td>
+<td>全称equal(a&#x3D;b)，比较寄存器ab内容，相同则跳</td>
+</tr>
+<tr>
+<td>if-ne</td>
+<td>全称not equal(a!&#x3D;b)，ab内容不相同则跳</td>
+</tr>
+<tr>
+<td>if-eqz</td>
+<td>全称equal zero(a&#x3D;0)，z即是0的标记，a等于0则跳</td>
+</tr>
+<tr>
+<td>if-nez</td>
+<td>全称not equal zero(a!&#x3D;0)，a不等于0则跳</td>
+</tr>
+<tr>
+<td>if-ge</td>
+<td>全称greater equal(a&gt;&#x3D;b)，a大于或等于则跳</td>
+</tr>
+<tr>
+<td>if-le</td>
+<td>全称little equal(a&lt;&#x3D;b)，a小于或等于则跳</td>
+</tr>
+<tr>
+<td>goto</td>
+<td>强制跳到指定位置</td>
+</tr>
+<tr>
+<td>switch</td>
+<td>分支跳转，一般会有多个分支线，并根据指令跳转到适当位置</td>
+</tr>
+<tr>
+<td>iget</td>
+<td>获取寄存器数据</td>
+</tr>
+</tbody></table>
+<p><img src="/image/image_CA9SrG4SXL.png"></p>
+<h2 id="弹窗定位"><a href="#弹窗定位" class="headerlink" title="弹窗定位"></a>弹窗定位</h2><h3 id="安卓四大组件"><a href="#安卓四大组件" class="headerlink" title="安卓四大组件"></a>安卓四大组件</h3><table>
+<thead>
+<tr>
+<th>组件</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Activity&#xA;(活动)</td>
+<td>在应用中的一个Activity可以用来表示一个界面，意思可以理解为“活动”，即一个活动开始，代表 Activity组件启动，活动结束，代表一个Activity的生命周期结束。一个Android应用必须通过Activity来运行和启动，Activity的生命周期交给系统统一管理。</td>
+</tr>
+<tr>
+<td>Service&#xA;(服务)</td>
+<td>Service它可以在后台执行长时间运行操作而没有用户界面的应用组件，不依赖任何用户界面，例如后台播放音乐，后台下载文件等。</td>
+</tr>
+<tr>
+<td>Broadcast Receiver&#xA;(广播接收器)</td>
+<td>一个用于接收广播信息，并做出对应处理的组件。比如我们常见的系统广播：通知时区改变、电量低、用户改变了语言选项等。</td>
+</tr>
+<tr>
+<td>Content Provider&#xA;(内容提供者)</td>
+<td>作为应用程序之间唯一的共享数据的途径，Content Provider主要的功能就是存储并检索数据以及向其他应用程序提供访问数据的接口。Android内置的许多数据都是使用Content Provider形式，供开发者调用的（如视频，音频，图片，通讯录等）</td>
+</tr>
+</tbody></table>
+<h3 id="Activity生命周期"><a href="#Activity生命周期" class="headerlink" title="Activity生命周期"></a>Activity生命周期</h3><table>
+<thead>
+<tr>
+<th>函数名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>onCreate()</td>
+<td>一个Activity启动后第一个被调用的函数，常用来在此方法中进行Activity的一些初始化操作。例如创建View，绑定数据，注册监听，加载参数等。</td>
+</tr>
+<tr>
+<td>onStart()</td>
+<td>当Activity显示在屏幕上时，此方法被调用但此时还无法进行与用户的交互操作。</td>
+</tr>
+<tr>
+<td>onResume()</td>
+<td>这个方法在onStart()之后调用，也就是在Activity准备好与用户进行交互的时候调用，此时的Activity一定位于Activity栈顶，处于运行状态。</td>
+</tr>
+<tr>
+<td>onPause()</td>
+<td>这个方法是在系统准备去启动或者恢复另外一个Activity的时候调用，通常在这个方法中执行一些释放资源的方法，以及保存一些关键数据。</td>
+</tr>
+<tr>
+<td>onStop()</td>
+<td>这个方法是在Activity完全不可见的时候调用的。</td>
+</tr>
+<tr>
+<td>onDestroy()</td>
+<td>这个方法在Activity销毁之前调用，之后Activity的状态为销毁状态。</td>
+</tr>
+<tr>
+<td>onRestart()</td>
+<td>当Activity从停止stop状态恢进入start状态时调用状态。</td>
+</tr>
+</tbody></table>
+<h2 id="动态调试"><a href="#动态调试" class="headerlink" title="动态调试"></a>动态调试</h2><h3 id="什么是动态调试"><a href="#什么是动态调试" class="headerlink" title="什么是动态调试"></a>什么是动态调试</h3><p>动态调试是指自带的调试器跟踪自己软件的运行，可以在调试的过程中知道参数或者局部变量的值以及履清代码运行的先后顺序。多用于爆破注册码(CTF必备技能)</p>
+<h3 id="动态调试步骤"><a href="#动态调试步骤" class="headerlink" title="动态调试步骤"></a>动态调试步骤</h3><h4 id="修改debug权限"><a href="#修改debug权限" class="headerlink" title="修改debug权限"></a>修改debug权限</h4><ul>
+<li><p>方法一: 在AndroidManifest.xml里添加可调试权限</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">android:debuggable=<span class="string">&quot;true&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>方法二：XappDebug模块hook对应的app</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/Palatis/XAppDebug" title="XappDebug">XappDebug</a></p>
+</li>
+<li><p>方法三：Magisk命令(重启失效)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span>  adb shell #adb进入命令行模式</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span>  su #切换至超级用户</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span>  magisk resetprop ro.debuggable <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="number">4.</span>  stop;start; #一定要通过该方式重启</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="端口转发以及开启adb权限"><a href="#端口转发以及开启adb权限" class="headerlink" title="端口转发以及开启adb权限"></a>端口转发以及开启adb权限</h4><p>版本号点击七次开启开发者模式并开启adb调试权限</p>
+<h4 id="下段点"><a href="#下段点" class="headerlink" title="下段点"></a>下段点</h4><p>ctrl+b下断点</p>
+<h4 id="debug模式启动"><a href="#debug模式启动" class="headerlink" title="debug模式启动"></a>debug模式启动</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">adb shell am start -D -n com.zj.wuaipojie/.ui.MainActivity</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">db shell am start -D -n</span></span><br><span class="line"><span class="comment">adb shell am start -D -n 包名/类名</span></span><br><span class="line"><span class="comment">am start -n 表示启动一个activity</span></span><br><span class="line"><span class="comment">am start -D 表示将应用设置为可调试模式</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Log插桩"><a href="#Log插桩" class="headerlink" title="Log插桩"></a>Log插桩</h4><p>定义：Log插桩指的是反编译APK文件时，在对应的smali文件里，添加相应的smali代码，将程序中的关键信息，以log日志的形式进行输出。</p>
+<p>调用命令</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">invoke-<span class="keyword">static</span> &#123;对应寄存器&#125;, Lcom/mtools/LogUtils;-&gt;v(Ljava/lang/Object;)V</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="校验和签名"><a href="#校验和签名" class="headerlink" title="校验和签名"></a>校验和签名</h2><h3 id="什么是校验"><a href="#什么是校验" class="headerlink" title="什么是校验"></a>什么是校验</h3><p>是开发者在数据传送时采用的一种校正数据的一种方式 &#x20;<br>常见的校验有:签名校验(最常见)、dexcrc校验、apk完整性校验、路径文件校验等</p>
+<h3 id="什么是APK签名"><a href="#什么是APK签名" class="headerlink" title="什么是APK签名"></a>什么是APK签名</h3><p>通过对 Apk 进行签名，开发者可以证明对 Apk 的所有权和控制权，可用于安装和更新其应用。而在 Android 设备上的安装 Apk ，如果是一个没有被签名的 Apk，则会被拒绝安装。在安装 Apk 的时候，软件包管理器也会验证 Apk 是否已经被正确签名，并且通过签名证书和数据摘要验证是否合法没有被篡改。只有确认安全无篡改的情况下，才允许安装在设备上。</p>
+<p>简单来说，APK 的签名主要作用有两个：</p>
+<p>证明 APK 的所有者。<br>允许 Android 市场和设备校验 APK 的正确性。<br>Android 目前支持以下四种应用签名方案：<br>v1 方案：基于 JAR 签名。<br>v2 方案：APK 签名方案 v2（在 Android 7.0 中引入）<br>v3 方案：APK 签名方案 v3（在 Android 9 中引入）<br>v4 方案：APK 签名方案 v4（在 Android 11 中引入）</p>
+<p>V1 签名的机制主要就在 META-INF 目录下的三个文件，MANIFEST.MF，ANDROID.SF，ANDROID.RSA，他们都是 V1 签名的产物。<br>（1）MANIFEST.MF：这是摘要文件。程序遍历Apk包中的所有文件(entry)，对非文件夹非签名文件的文件，逐个用SHA1(安全哈希算法)生成摘要信息，再用Base64进行编码。如果你改变了apk包中的文件，那么在apk安装校验时，改变后的文件摘要信息与MANIFEST.MF的检验信息不同，于是程序就不能成功安装。</p>
+<h2 id="HOOK"><a href="#HOOK" class="headerlink" title="HOOK"></a>HOOK</h2><p><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1748081-1-1.html" title="《安卓逆向这档事》八、Sorry，会Hook真的可以为所欲为-xposed快速上手(下)快速hook - 『移动安全区』 - 吾爱破解 - LCG - LSG |安卓破解|病毒分析|www.52pojie.cn">《安卓逆向这档事》八、Sorry，会Hook真的可以为所欲为-xposed快速上手(下)快速hook - 『移动安全区』 - 吾爱破解 - LCG - LSG |安卓破解|病毒分析|www.52pojie.cn</a></p>
+<h3 id="Xposed"><a href="#Xposed" class="headerlink" title="Xposed"></a>Xposed</h3><p>Xposed是一款可以在不修改APK的情况下影响程序运行的框架，基于它可以制作出许多功能强大的模块，且在功能不冲突的情况下同时运作。在这个框架下，我们可以编写并加载自己编写的插件APP，实现对目标apk的注入拦截等。</p>
+<h3 id="Xposed-原理"><a href="#Xposed-原理" class="headerlink" title="Xposed 原理"></a>Xposed 原理</h3><p>用自己实现的<strong>app_process</strong>替换掉了系统原本提供的<strong>app_process</strong>，加载一个额外的jar包，入口从原来的： **com.android.internal.osZygoteInit.main()被替换成了：  de.robv.android.xposed.XposedBridge.main()**，<br>创建的Zygote进程就变成Hook的Zygote进程了，从而完成对zygote进程及其创建的Dalvik&#x2F;ART虚拟机的劫持(zytoge注入)</p>
+<p><img src="/image/image_Y4lP5Fwd9E.png"></p>
+<h3 id="Xposed妙用"><a href="#Xposed妙用" class="headerlink" title="Xposed妙用"></a>Xposed妙用</h3><p>字符串赋值定位:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">XposedHelpers.findAndHookMethod(<span class="string">&quot;android.widget.TextView&quot;</span>, lpparam.classLoader, <span class="string">&quot;setText&quot;</span>, CharSequence.class, <span class="keyword">new</span> <span class="title class_">XC_MethodHook</span>() &#123;  </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">beforeHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable &#123;  </span><br><span class="line">        <span class="built_in">super</span>.beforeHookedMethod(param);  </span><br><span class="line">        Log.d(<span class="string">&quot;zj2595&quot;</span>,param.args[<span class="number">0</span>].toString());  </span><br><span class="line">                <span class="keyword">if</span>(param.args[<span class="number">0</span>].equals(<span class="string">&quot;已过期&quot;</span>))&#123;  </span><br><span class="line">                    printStackTrace();  </span><br><span class="line">                &#125;</span><br><span class="line">    &#125;  </span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">printStackTrace</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="type">Throwable</span> <span class="variable">ex</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Throwable</span>();  </span><br><span class="line">    StackTraceElement[] stackElements = ex.getStackTrace();  </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; stackElements.length; i++) &#123;  </span><br><span class="line">        <span class="type">StackTraceElement</span> <span class="variable">element</span> <span class="operator">=</span> stackElements[i];  </span><br><span class="line">        Log.d(<span class="string">&quot;zj2595&quot;</span>,<span class="string">&quot;at &quot;</span> + element.getClassName() + <span class="string">&quot;.&quot;</span> + element.getMethodName() + <span class="string">&quot;(&quot;</span> + element.getFileName() + <span class="string">&quot;:&quot;</span> + element.getLineNumber() + <span class="string">&quot;)&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>点击事件监听：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Class</span> <span class="variable">clazz</span> <span class="operator">=</span> XposedHelpers.findClass(<span class="string">&quot;android.view.View&quot;</span>, lpparam.classLoader);</span><br><span class="line">XposedBridge.hookAllMethods(clazz, <span class="string">&quot;performClick&quot;</span>, <span class="keyword">new</span> <span class="title class_">XC_MethodHook</span>() &#123;  </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable &#123;  </span><br><span class="line">        <span class="built_in">super</span>.afterHookedMethod(param);  </span><br><span class="line">        <span class="type">Object</span> <span class="variable">listenerInfoObject</span> <span class="operator">=</span> XposedHelpers.getObjectField(param.thisObject, <span class="string">&quot;mListenerInfo&quot;</span>);  </span><br><span class="line">        <span class="type">Object</span> <span class="variable">mOnClickListenerObject</span> <span class="operator">=</span> XposedHelpers.getObjectField(listenerInfoObject, <span class="string">&quot;mOnClickListener&quot;</span>);  </span><br><span class="line">        <span class="type">String</span> <span class="variable">callbackType</span> <span class="operator">=</span> mOnClickListenerObject.getClass().getName();  </span><br><span class="line">        Log.d(<span class="string">&quot;zj2595&quot;</span>,callbackType);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+        
+      </div>
+
+         
+    </div>
+    
+     
+  </div>
+  
+    
+<nav id="article-nav">
+  <a class="article-nav-btn left  disabled "
+     >
+    <i class="fa-solid fa-angle-left"></i>
+    <p class="title-text">
+        
+    </p>
+  </a>
+  <a class="article-nav-btn right "
+    
+      href="/2023/12/23/hello-world/"
+      title="Hello World"
+     >
+
+    <p class="title-text">
+      
+        Hello World
+        
+    </p>
+    <i class="fa-solid fa-angle-right"></i>
+  </a>
+</nav>
+
+
+  
+</article>
+
+
+  
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <div id="comment-card" class="comment-card">
+    <div class="main-title-bar">
+      <div class="main-title-dot"></div>
+      <div class="main-title">Comments </div>
+    </div>
+    <div id="vcomments"></div>
+  </div>
+  <script>
+      new Valine({"enable":true,"appId":null,"appKey":null,"placeholder":"Just go go","pageSize":10,"highlight":true,"serverURLs":null,"el":"#vcomments"});
+  </script>
+
+
+
+
+    </div>
+    <div id="footer-wrapper">
+      <footer id="footer">
+  
+  <div id="footer-info" class="inner">
+    
+    &copy; 2023 追着光梦游<br>
+    Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & Theme <a target="_blank" rel="noopener" href="https://github.com/saicaca/hexo-theme-vivia">Vivia</a>
+  </div>
+</footer>
+
+    </div>
+    <div class="back-to-top-wrapper">
+    <button id="back-to-top-btn" class="back-to-top-btn hide" onclick="topFunction()">
+        <i class="fa-solid fa-angle-up"></i>
+    </button>
+</div>
+
+<script>
+    function topFunction() {
+        window.scroll({ top: 0, behavior: 'smooth' });
+    }
+    let btn = document.getElementById('back-to-top-btn');
+    function scrollFunction() {
+        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
+            btn.classList.remove('hide')
+        } else {
+            btn.classList.add('hide')
+        }
+    }
+    window.onscroll = function() {
+        scrollFunction();
+    }
+</script>
+
+  </div>
+  <script src="/js/light-dark-switch.js"></script>
+</body>
+</html>
